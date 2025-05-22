@@ -23,8 +23,8 @@ jobs:
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
 
-permissions:
-  contents: read
-  actions: read
-  id-token: write
-  security-events: write
+# permissions:
+#   contents: read
+#   actions: read
+#   id-token: write
+#   security-events: write
