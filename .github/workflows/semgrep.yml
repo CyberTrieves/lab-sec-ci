@@ -1,0 +1,71 @@
+name: Semgrep SAST scanning.
+
+permissions:
+  contents: read
+  actions: read
+  id-token: write
+  security-events: write
+
+on:
+  workflow_call:
+    inputs:
+      working-directory:
+        default: '.'
+        description: 'The working directory to run the scan in. This is relative to the root of the repository.'
+        required: false
+        type: string
+      is-blocking:
+        default: true
+        description: 'Whether the scan should block the workflow if it fails.'
+        required: false
+        # The default value is true, but it can be set to false to allow the workflow to continue even if the scan fails.
+        type: boolean
+
+jobs:
+  semgrep-scan:
+    permissions:
+      contents: read          # The contents permission is required to read the repository contents.  
+      actions: read           # The actions permission is required to read the actions logs.  
+      id-token: write         # The id-token permission is required to authenticate with the GitHub API.
+      security-events: write  # The security-events permission is required to write SARIF files to the security events API.
+
+    name: Semgrep SAST scanning
+    timeout-minutes: 15
+    runs-on: self-hosted
+    steps:
+      - name: Inputs infos
+        run: |
+          echo "Working directory: ${{ inputs.working-directory }}"
+          echo "Is blocking: ${{ inputs.is-blocking }}"
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.13 to install and run Semgrep
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.13
+          cache: 'pip'
+
+      - name: Install Semgrep
+        run: |
+          python -m pip install --upgrade pip
+          pip install semgrep
+          semgrep --version
+
+      - name: Run Semgrep rules
+        run: |
+          semgrep --config auto ${{ inputs.working-directory }} --output-format sarif --sarif-file-path semgrep.sarif --json-pp semgrep.json
+          echo "Semgrep scan completed."
+          echo "Semgrep scan results:"
+          cat semgrep.sarif
+          echo "Semgrep scan results in JSON format:"
+          cat semgrep.json
+
+      - name: Upload SARIF file to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: semgrep.sarif
+          fail_on_error: false
+          category: SAST analysis
+

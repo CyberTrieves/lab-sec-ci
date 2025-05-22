@@ -1,0 +1,25 @@
+name: Workflow Semgrep centralisé
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+permissions:
+      contents: read          # The contents permission is required to read the repository contents.  
+      actions: read           # The actions permission is required to read the actions logs.  
+      id-token: write         # The id-token permission is required to authenticate with the GitHub API.
+      security-events: write  # The security-events permission is required to write SARIF files to the security events API.
+
+jobs:
+  call-semgrep-scan:
+    uses: ./.github/workflows/semgrep.yml
+    with:
+      working-directory: '.'
+      is-blocking: true
+
+  call-codeql-scan:
+    uses: ./.github/workflows/codeql.yml
+    with:
+      languages: javascript
