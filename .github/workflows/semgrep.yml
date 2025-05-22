@@ -21,13 +21,8 @@ on:
         # The default value is true, but it can be set to false to allow the workflow to continue even if the scan fails.
         type: boolean
       python-version:
-        default: '3.11'
+        default: '3.13'
         description: 'The version of Python to use for the Semgrep installation.'
-        required: false
-        type: string
-      python-container:
-        default: 'python:3.13-slim'
-        description: 'The Docker image to use for the Semgrep installation.'
         required: false
         type: string
 
@@ -77,6 +72,5 @@ jobs:
         uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: semgrep.sarif
-          fail_on_error: false
-          category: SAST analysis
+          category: Semgrep SAST analysis
 
