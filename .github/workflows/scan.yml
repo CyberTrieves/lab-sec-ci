@@ -18,7 +18,7 @@ jobs:
     with:
       working-directory: '.'
       is-blocking: true
-      python-version: '3.13'
+      python-version: '3.11'
 
   call-codeql-scan:
     uses: ./.github/workflows/codeql.yml
