@@ -21,7 +21,7 @@ on:
         # The default value is true, but it can be set to false to allow the workflow to continue even if the scan fails.
         type: boolean
       python-version:
-        default: '3.11'
+        default: '3.13'
         description: 'The version of Python to use for the Semgrep installation.'
         required: false
         type: string
@@ -50,6 +50,7 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: ${{ inputs.python-version }}
+          cache: 'pip'
 
       - name: Install Semgrep
         run: |
@@ -59,7 +60,9 @@ jobs:
 
       - name: Run Semgrep rules
         run: |
-          semgrep --config auto ${{ inputs.working-directory }} --output-format sarif --sarif-file-path semgrep.sarif --json-pp semgrep.json
+          semgrep --config auto ${{ inputs.working-directory }} \
+            --sarif-output semgrep.sarif \
+            --json-output semgrep.json
           echo "Semgrep scan completed."
           echo "Semgrep scan results:"
           cat semgrep.sarif
