@@ -13,7 +13,7 @@ on:
     - cron: "0 0 * * 0"
 
 jobs:
-  analyze:
+  codql-scan:
     permissions:
       contents: read          # The contents permission is required to read the repository contents.  
       actions: read           # The actions permission is required to read the actions logs.  

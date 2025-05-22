@@ -1,4 +1,4 @@
-name: Workflow Semgrep centralisé
+name: Centralized SAST scanning
 
 on:
   push:
