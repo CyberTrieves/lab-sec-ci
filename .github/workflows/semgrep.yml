@@ -20,6 +20,11 @@ on:
         required: false
         # The default value is true, but it can be set to false to allow the workflow to continue even if the scan fails.
         type: boolean
+      python-version:
+        default: '3.13.0'
+        description: 'The version of Python to use for the Semgrep installation.'
+        required: false
+        type: string
 
 jobs:
   semgrep-scan:
@@ -41,10 +46,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Python 3.12 to install and run Semgrep
+      - name: Set up Python ${{ inputs.python-version }} to install and run Semgrep
         uses: actions/setup-python@v4
         with:
-          python-version: 3.12
+          python-version: ${{ inputs.python-version }}
 
       - name: Install Semgrep
         run: |
