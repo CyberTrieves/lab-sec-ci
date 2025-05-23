@@ -14,7 +14,6 @@ permissions:
 
 jobs:
   call-semgrep-scan:
-    # uses: ./.github/workflows/semgrep.yml
     uses: CyberTrieves/ci-templates/.github/workflows/scan-semgrep.yml@main
     with:
       working-directory: '.'
@@ -22,7 +21,11 @@ jobs:
       python-version: '3.11'
 
   call-codeql-scan:
-    # uses: ./.github/workflows/codeql.yml
     uses: CyberTrieves/ci-templates/.github/workflows/scan-codeql.yml@main
     with:
       languages: javascript
+
+  call-checkov-scan:
+    uses: CyberTrieves/ci-templates/.github/workflows/scan-checkov.yml@main
+    with:
+      python-version: '3.11'
