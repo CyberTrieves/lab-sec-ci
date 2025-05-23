@@ -25,7 +25,12 @@ jobs:
   #   with:
   #     languages: javascript
 
-  call-checkov-scan:
-    uses: CyberTrieves/ci-templates/.github/workflows/scan-checkov.yml@main
+  # call-checkov-scan:
+  #   uses: CyberTrieves/ci-templates/.github/workflows/scan-checkov.yml@main
+  #   with:
+  #     python-version: '3.11'
+
+  call-trivy-scan:
+    uses: CyberTrieves/ci-templates/.github/workflows/scan-trivy.yml@main
     with:
       python-version: '3.11'
