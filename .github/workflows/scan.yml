@@ -1,0 +1,37 @@
+name: Centralized SAST scanning
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+permissions:
+      contents: read          # The contents permission is required to read the repository contents.  
+      actions: read           # The actions permission is required to read the actions logs.  
+      id-token: write         # The id-token permission is required to authenticate with the GitHub API.
+      security-events: write  # The security-events permission is required to write SARIF files to the security events API.
+
+jobs:
+  call-semgrep-scan:
+    uses: CyberTrieves/ci-templates/.github/workflows/scan-semgrep.yml@main
+    with:
+      working-directory: '.'
+      is-blocking: true
+      python-version: '3.13-slim'
+
+  call-codeql-scan:
+    uses: CyberTrieves/ci-templates/.github/workflows/scan-codeql.yml@main
+    with:
+      languages: javascript
+
+  call-checkov-scan:
+    uses: CyberTrieves/ci-templates/.github/workflows/scan-checkov.yml@main
+    with:
+      python-version: '3.13-slim'
+
+  call-trivy-scan:
+    uses: CyberTrieves/ci-templates/.github/workflows/scan-trivy.yml@main
+    with:
+      python-version: '3.13-slim'
+      repository-url: 'https://github.com/CyberTrieves/lab-sec-ci'
